@@ -29,7 +29,8 @@ let dataStructure: IQuestions = JSON.parse(jsonQuestions),
     timerParagraph = document.querySelector("#timer") as HTMLParagraphElement,
     infoParagraph = document.querySelector("#info") as HTMLParagraphElement,
     penaltyList = document.querySelector("#penaltyList") as HTMLUListElement,
-    solve = 0, akt = 0, startTimeSec = 0, totalResult = 0;
+    solve = 0, akt = 0, startTimeSec = 0, totalResult = 0,
+    currentSec = 0, currentMin = 0, currentMil = 0, timerOn = false;
 
 for (var i = 0; i < dataStructure.length; i++) {
     let li = document.createElement('li');
@@ -40,7 +41,7 @@ for (var i = 0; i < dataStructure.length; i++) {
 function start() {
     infoParagraph.innerHTML = "Pytanie 1, kara za błędną odpowiedź: "
         + dataStructure[0].penalty + "s.";
-    keepgoin = true;
+    timerOn = true;
     timer();
     startButton.hidden = true;
     stopButton.hidden = true;
@@ -61,11 +62,11 @@ function reset() {
     questionnaire.hidden = false;
     startButton.hidden = false;
     solvePart.hidden = true;
-    startover();
+    restartTimer();
 }
 
 function change(x: number) {
-    let currentTimeSec = currentsec + currentmin * 60;
+    let currentTimeSec = currentSec + currentMin * 60;
     akt += x;
 
     if (akt == 0)
@@ -106,11 +107,11 @@ function check() {
 }
 
 function finish() {
-    let currentTimeSec = currentsec + currentmin * 60;
+    let currentTimeSec = currentSec + currentMin * 60;
     dataStructure[akt].answer = input.value;
     dataStructure[akt].time += (currentTimeSec - startTimeSec);
 
-    startover();
+    restartTimer();
 
     questionnaire.hidden = true;
     result.hidden = false;
@@ -134,42 +135,39 @@ function finish() {
     resultParagaph.innerHTML = "Wynik: " + totalResult + "s.";
 }
 
-let currentsec = 0;
-let currentmin = 0;
-let Strmin = "00";
-let Strsec = "00";
-let keepgoin = false;  // keepgoin is false
 function timer() {
     timerParagraph.hidden = false;
     infoParagraph.hidden = false;
-    if (keepgoin) {
-        currentsec++;
-        if (currentsec == 60) {  // if seconds reach 60
-            currentsec = 0;  // Change seconds to zero
-            currentmin += 1;  // and add one to the minute variable
+
+    if (timerOn) {
+        currentMil++;
+
+        if (currentMil == 10) {
+            currentMil = 0;
+            currentSec += 1;
         }
-        Strsec = "" + currentsec;  // Convert to strings
-        Strmin = "" + currentmin;  // Convert to strings
-        if (Strsec.length != 2) { // if seconds string is less than
-            Strsec = "0" + currentsec; // 2 characters long, pad with leading
-        }    // zeros
-        if (Strmin.length != 2) { // Same deal here with minutes
-            Strmin = "0" + currentmin;
+
+        if (currentSec == 60) {
+            currentSec = 0;
+            currentMin += 1;
         }
-        timerParagraph.innerHTML = "Czas rozwiązywania: " + Strmin + ":" + Strsec;
-        setTimeout("timer()", 1000); // waits one second and repeats
+
+        timerParagraph.innerHTML = "Czas rozwiązywania: " + (currentMin < 10 ? "0" : "")
+            + currentMin + ":" + + (currentSec < 10 ? "0" : "") + currentSec;
+
+        setTimeout("timer()", 100);
     }
     else {
         timerParagraph.hidden = true;
         infoParagraph.hidden = true;
     }
 }
-function startover() {
-    keepgoin = false;
-    currentsec = 0;
-    currentmin = 0;
-    Strsec = "00";
-    Strmin = "00";
+
+function restartTimer() {
+    timerOn = false;
+    currentSec = 0;
+    currentMin = 0;
+    currentMil = 0;
 }
 
 function saveResult() {
@@ -178,7 +176,6 @@ function saveResult() {
         storedResults = JSON.parse(localStorage.getItem("results"));
     storedResults.push(totalResult);
     localStorage.setItem("results", JSON.stringify(storedResults));
-    console.log(storedResults);
 }
 
 function saveResultAndStats() {
@@ -189,7 +186,6 @@ function saveResultAndStats() {
         storedResults = JSON.parse(localStorage.getItem("stats"));
     storedResults.push({ "result": totalResult, "stats": stats });
     localStorage.setItem("stats", JSON.stringify(storedResults));
-    console.log(storedResults);
 }
 
 function saveAndReset() {
