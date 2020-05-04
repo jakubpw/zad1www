@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Quiz</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+
+</head>
+
+<body>
+    <div class="grid-container">
+    <header class="item1">
+        <h1>Liczyć każdy może, trochę lepiej, trochę gorzej.</h1>
+    </header>
+    <main class="item2">
+        <div id="questionnaire">
+            <p id = "wstęp">
+                Quiz algebraiczny, rozwiązanie każdego z równań należy wpisać w pole obok znaku '='.
+                Zatwierdzeniem odpowiedzi, jest przejście do kolejnego pytania.  Do kolejnego pytania
+                można przejść, nie udzielając odpowiedzi na pytanie poprzednie. Można cofnąć się do 
+                poprzedniego pytania. Nie można zakończyć quizu nie udzielając odpowiedzi na wszystkie
+                pytania. Quiz można zakończyć przyciskiem "Stop", który jest aktywny tylko gdy są 
+                udzielone odpowiedzi na wszystkie pytania. Wynik to czas spędzony nad wszystkim
+                pytaniami + kary za błedne odpowiedzi. Poniżej lista kar :
+            </p>
+            <ul id = "penaltyList"></ul>
+            <button id='start' onclick="start()">Start</button>
+            <div id="solvePart" hidden>
+                <form>
+                    <label id='question'></label>
+                    <input oninput="check()" type="number" id = "answer">
+                </form>
+                <button id='reset' onclick="reset()">Reset</button>
+                <button id='prev' onclick="change(-1)" disabled>Poprzednie</button>
+                <button id='next' onclick="change(1)" disabled>Następne</button>
+                <button id='finish' onclick="finish()" disabled>Stop</button>
+            </div>
+        </div>
+
+        <div id="result" hidden>
+            <ul id="resultList"></ul>
+            <p id="resultParagraph"></p>
+            <button id='reset2' onclick="reset()">Reset</button>
+            <button id='reset2' onclick="saveAndReset()">Zapisz i reset</button>
+            <button id='reset2' onclick="saveResultAndStatsAndReset()">Zapisz statystki i reset</button>
+        </div>
+    </main>
+    <aside class="item3">
+        <p id = "timer" hidden></p>
+        <p id = "info" hidden></p>
+    </aside>
+    <footer class="item4">
+        Autor: Jakub Walendowski (jw406397)
+    </footer>
+    </div>
+    <script src='main.js'></script>
+</body>
+
+</html>
