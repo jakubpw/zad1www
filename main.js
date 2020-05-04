@@ -102,7 +102,7 @@ function timer() {
             currentMin += 1;
         }
         timerParagraph.innerHTML = "Czas rozwiązywania: " + (currentMin < 10 ? "0" : "")
-            + currentMin + ":" + +(currentSec < 10 ? "0" : "") + currentSec;
+            + currentMin + ":" + (currentSec < 10 ? "0" : "") + currentSec;
         setTimeout("timer()", 100);
     }
     else {
